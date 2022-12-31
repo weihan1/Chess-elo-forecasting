@@ -1,9 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import datetime
-from api_acess import client
+from api_access import client
 import calendar
 from dateutil import parser
+import matplotlib
+from datetime import datetime
 
 
 entries_of_bullet_ratings = \
@@ -58,7 +60,50 @@ def str_to_datetime(time):
 dtime = str_to_datetime(str_times)
 
 
-fig, ax = plt.subplots()
-fig.autofmt_xdate()
-plt.plot(dtime, ratings)
-plt.show()
+def dictionary_mapping(time, ratings):
+    '''
+    Creates a dictionary mapping the datetime objects to the ratings.
+    '''
+    d = {}
+    for i in range(len(time)):
+        d[time[i]] = ratings[i]
+    return d
+
+dictionary_map = dictionary_mapping(dtime, ratings)
+# print(dictionary_map)
+
+
+def monthly_rating(dictionary):
+    '''
+    Creates a dictionary mapping the month and the year to the average rating.
+    '''
+    monthly_ratings = {}
+    for key in dictionary:
+        if (key.year, key.month) in monthly_ratings:
+            monthly_ratings[(key.year, key.month)].append(dictionary[key])
+        else:
+            monthly_ratings[(key.year, key.month)] = [dictionary[key]]
+    for key in monthly_ratings:
+        monthly_ratings[key] = np.mean(monthly_ratings[key])
+    return monthly_ratings
+
+
+monthly_ratings = monthly_rating(dictionary_map)
+# print(monthly_ratings)
+
+
+def plot_ratings(dictionary):
+    '''
+    Plots the monthly ratings.
+    '''
+    x_values = [datetime(*(date+(1,))) for date in dictionary.keys()]
+    y_values = list(dictionary.values())
+    dates = matplotlib.dates.date2num(x_values)
+    plt.plot_date(dates, y_values)
+    plt.show()
+
+plot_ratings(monthly_ratings)
+# fig, ax = plt.subplots()
+# fig.autofmt_xdate()
+# plt.plot(dtime, ratings)
+# plt.show()
