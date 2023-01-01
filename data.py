@@ -99,10 +99,19 @@ def plot_ratings(dictionary):
     x_values = [datetime(*(date+(1,))) for date in dictionary.keys()]
     y_values = list(dictionary.values())
     dates = matplotlib.dates.date2num(x_values)
-    plt.plot_date(dates, y_values)
+    plt.plot_date(dates, y_values, linestyle='solid', marker='o')
+    # plt.plot(dates, y_values, 'o')
     plt.show()
 
 plot_ratings(monthly_ratings)
+
+def add_line_to_scatterplot(plot):
+    '''
+    Add a line connecting each point in the scatterplot
+    '''
+
+    
+
 # fig, ax = plt.subplots()
 # fig.autofmt_xdate()
 # plt.plot(dtime, ratings)
