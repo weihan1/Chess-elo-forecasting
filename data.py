@@ -6,6 +6,7 @@ import calendar
 from dateutil import parser
 import matplotlib
 from datetime import datetime
+import pandas as pd
 
 
 entries_of_bullet_ratings = \
@@ -103,12 +104,35 @@ def plot_ratings(dictionary):
     # plt.plot(dates, y_values, 'o')
     plt.show()
 
-plot_ratings(monthly_ratings)
+# plot_ratings(monthly_ratings)
 
-def add_line_to_scatterplot(plot):
+
+def train_test_split(dictionary):
     '''
-    Add a line connecting each point in the scatterplot
+    Splits the dictionary into a training and testing set, every rating before 2022-07-01
+    is in the training set, and every rating after 2022-07-01 is in the testing set.
     '''
+    train = []
+    test = []
+    for key in dictionary:
+        if key[0] < 2022 or (key[0] == 2022 and key[1] < 7):
+            train.append(dictionary[key])
+        else:
+            test.append(dictionary[key])
+    return train, test
+
+def create_df(dictionary):
+    '''
+    Creates a dataframe from the dictionary mapping the month and year to the average rating.
+    '''
+    df = pd.DataFrame(list(dictionary.items()), columns = ['ds', 'y'])
+    df['ds'] = pd.to_datetime(df['ds'].apply(lambda x: datetime(*(x+(1,)))))
+    return df
+
+df = create_df(monthly_ratings)
+print(df)
+
+
 
     
 

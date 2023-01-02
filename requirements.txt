@@ -2,3 +2,4 @@ berserk
 matplotlib
 datetime
 dateutils
+prophet
